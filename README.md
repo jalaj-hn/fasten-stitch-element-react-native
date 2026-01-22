@@ -1,55 +1,72 @@
-
 # Fasten Connect React Native SDK (Beta)
 
-This project provides a React Native SDK for integrating Fasten Connect into your application. **Please note that this 
-SDK is currently in beta and may not reflect the final version of the Fasten Connect React Native SDK.**
+A lightweight React Native SDK that embeds the Fasten Connect experience inside any React Native application. The
+package wraps the Stitch.js workflow in a pair of coordinated `WebView`s so you can authenticate with provider portals
+and receive connection events without leaving your native app.
 
-## Prerequisites
+> **Status:** Beta – APIs may change and you should validate the integration in your environment before shipping to
+> production.
 
-Before setting up the project, ensure you have the following installed:
+## Installation
 
-- **Node.js** (v14 or later)
-- **Yarn**
-- **React Native CLI**
-- A working React Native environment (iOS/Android)
+Add the package to your project along with its React Native peer dependency:
 
-## Setup Instructions
+```bash
+npm install @fastenhealth/stitch-react-native react-native-webview
+# or
+yarn add @fastenhealth/stitch-react-native react-native-webview
+```
 
-1. **Clone the repository**:
-   ```bash
-   git clone <repository-url>
-   cd <repository-folder>
-   ```
+`react-native-base64` is bundled with the SDK. If you do not already have `react-native-webview` installed, follow the
+[official installation guide](https://github.com/react-native-webview/react-native-webview#installation) for your
+platform(s).
 
-2. **Install dependencies**:
-   Use `yarn` to install the required dependencies:
-   ```bash
-   yarn install
-   ```
+## Usage
 
-3. **Configure the SDK**:
-    - Replace `CUSTOMER_PUBLIC_ID` in the `App.ts` file with your actual public ID provided by Fasten Connect.
+```tsx
+import { FastenStitchElement } from 'fasten-connect-stitch-react-native';
 
-4. **Run the application**:
-    ```
-   npx expo start
-   ```
+const CUSTOMER_PUBLIC_ID = 'public_test_...';
 
-## Notes
+export const ConnectScreen = () => (
+  <FastenStitchElement
+    publicId={CUSTOMER_PUBLIC_ID}
+    debugModeEnabled
+    onEventBus={(event) => {
+      console.log('Fasten event', event);
+    }}
+  />
+);
+```
 
-- This SDK uses `WebView` to embed Fasten Connect functionality. Ensure your app has the necessary permissions and configurations for `WebView` to work correctly.
+`FastenStitchElement` renders to fill the available space, so wrap it in a container that matches how you want it to appear in
+your layout (e.g., a `View` with `flex: 1`).
 
-## Known Issues
+### Props
 
-- The SDK is in beta, and some features may not work as expected.
-- Documentation and API stability are subject to change in future releases.
-- Styles and UI components may not be fully customizable at this stage.
+The component accepts the following options (matching the Stitch.js widget configuration):
+
+- `publicId` (**required**) – Your Fasten Connect public identifier.
+- `externalId` – Identifier you want to associate with the patient/session.
+- `reconnectOrgConnectionId` – Reconnect a previously established patient connection.
+- `searchOnly`, `searchQuery`, `searchSortBy`, `searchSortByOpts`, `showSplash` – Configure the provider search
+  experience.
+- `brandId`, `portalId`, `endpointId` – Restrict the experience to a specific brand/portal/endpoint.
+- `tefcaMode` -  Enable TEFCA flows
+- `eventTypes` – Comma-delimited list of event types to receive.
+- `debugModeEnabled` – Surfaces debugging tools in the embedded web views.
+- `onEventBus` – Callback invoked with parsed payloads sent from Fasten Connect (e.g., when a connection is created).
+
+Refer to `FastenConnectOptions` in `src/FastenStitchElement.tsx` for the complete, documented type definition.
+
+## Building the SDK locally
+
+Transpile TypeScript to the distributable `dist/` folder:
+
+```bash
+npm run build
+```
 
 ## Feedback
 
-We welcome your feedback! Please report any issues or suggestions via the issue tracker in this repository.
-
----
-
-**Disclaimer**: This SDK is provided as-is during the beta phase. Use it at your own risk in production environments.
-```
+Please open an issue with any bugs or requests. Your feedback will help us stabilize the public SDK interface.
