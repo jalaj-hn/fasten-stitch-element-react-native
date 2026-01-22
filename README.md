@@ -12,9 +12,9 @@ and receive connection events without leaving your native app.
 Add the package to your project along with its React Native peer dependency:
 
 ```bash
-npm install @fastenhealth/stitch-react-native react-native-webview
+npm install @fastenhealth/fasten-stitch-element-react-native react-native-webview
 # or
-yarn add @fastenhealth/stitch-react-native react-native-webview
+yarn add @fastenhealth/fasten-stitch-element-react-native react-native-webview
 ```
 
 `react-native-base64` is bundled with the SDK. If you do not already have `react-native-webview` installed, follow the
